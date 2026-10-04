@@ -96,9 +96,9 @@ elif command == "dev":
     )    
 else:
     print(
-    ''' i dont know this command, there are 3 availble. 
+    ''' i dont know this command, there are 3 available. 
     NOTE : Run the train command first 
-    
+
     python spam_detector.py train - use this first to train on a traing set
     python spam_detector.py predict "your sms message here"
     python spam_detector.py dev - Info about the project and the developer
