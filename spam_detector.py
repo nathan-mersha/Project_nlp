@@ -3,6 +3,9 @@ import pandas as pan
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+import sys
+import nltk
+from sklearn.model_selection import train_test_split
 
 # so this funciton cleans up the text and removes the unnnecessary stop words
 def cleanup_txt(text):
@@ -17,25 +20,26 @@ def cleanup_txt(text):
     return cleaned_wrds;
 
 
-data = "data/raw/SMSSpamCollection"
+data_path = "data/raw/SMSSpamCollection"
 
 random_stat = 42
 
 metrics_path = "reports/metrics.csv"
 model_path = "models/model.joblib"
 vectorizer_path = "models/vectorizer.joblib"
+
 def train():
-    data = pan.read_ssv(data, sep="\t", names=["label", "text"])
+    data = pan.read_csv(data_path, sep="\t", names=["label", "text"])
     texts = data['text'].map(cleanup_txt)
     label = []
     labels = (data["label"] == "spam").astype(int)
-    textsize=0.2 #means keeping 20 percent of it as a test
+    testsize=0.2 #means keeping 20 percent of it as a test
     train_texts, test_texts, train_labels, test_labels = train_test_split(
         texts, labels, test_size=testsize, random_state=random_stat, stratify=labels
     )
 
     vectorizer = TfidfVectorizer().fit(train_texts)
-    tests_v = vectorizer.transform(test_texts)
+    test_v = vectorizer.transform(test_texts)
 
     results = []
     precent_for_test = [0.1, 0.5, 1.0]
@@ -45,7 +49,7 @@ def train():
 
         model = MultinomialNB()
         model.fit(vectorizer.transform(s), s_lbl)
-        predictions = model.predict(test_vectors)
+        predictions = model.predict(test_v)
 
         row = [
             len(s),
@@ -66,7 +70,7 @@ def predict(text):
     vector = vectorizer.transform([cleanup_txt(text)])
     if model.predict(vector)[0] == 1:
         print("this is a spam")
-    else
+    else:
         print('this is nNot a spam')
 
 
@@ -76,7 +80,7 @@ if command == "train":
     train()
 elif command == "predict" and message:
     predict(message)
-else
+else:
     print(
     ''' i dont know this command, there are 2 availble. 
     python spam_detector.py train - use this first to train on a traing set
