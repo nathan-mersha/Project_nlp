@@ -15,14 +15,13 @@ my_stop_words = set(nltk.corpus.stopwords.words("english")) # i get all english 
 lem = nltk.stem.WordNetLemmatizer()
 # so this funciton cleans up the text and removes the unnnecessary stop words
 def cleanup_txt(text):
-   
     cleaned_wrds = ""
     for word in nltk.tokenize.word_tokenize(text.lower()):
         if word not in my_stop_words:
             if cleaned_wrds != "":
                 cleaned_wrds = cleaned_wrds + " "
             cleaned_wrds = cleaned_wrds + lem.lemmatize(word)
-    return cleaned_wrds;
+    return cleaned_wrds
 
 
 data_path = "data/raw/SMSSpamCollection"
@@ -36,7 +35,6 @@ vectorizer_path = "models/vectorizer.joblib"
 def train():
     data = pan.read_csv(data_path, sep="\t", names=["label", "text"])
     texts = data['text'].map(cleanup_txt)
-    label = []
     labels = (data["label"] == "spam").astype(int)
     testsize=0.2 #means keeping 20 percent of it as a test
     train_texts, test_texts, train_labels, test_labels = train_test_split(
@@ -64,10 +62,10 @@ def train():
             f1_score(test_labels, predictions)
         ]
         results.append(row)
-        columns = ["train_size", "accuracy", "precision", "recall", "f1"]
-        pan.DataFrame(results, columns=columns).to_csv(metrics_path, index=False)
-        joblib.dump(model, model_path)
-        joblib.dump(vectorizer, vectorizer_path)
+    columns = ["train_size", "accuracy", "precision", "recall", "f1"]
+    pan.DataFrame(results, columns=columns).to_csv(metrics_path, index=False)
+    joblib.dump(model, model_path)
+    joblib.dump(vectorizer, vectorizer_path)
 
 def predict(text):
     model = joblib.load(model_path)
@@ -94,7 +92,8 @@ elif command == "dev":
     )    
 else:
     print(
-    ''' i dont know this command, there are 2 availble. 
+    ''' i dont know this command, there are 3 availble. 
     python spam_detector.py train - use this first to train on a traing set
     python spam_detector.py predict "your sms message here, put what ever you want spam or ham or chicken for all i care"
+    python spam_detector.py dev - Info about the project and the developer
     ''')
