@@ -10,8 +10,9 @@ Accuracy : 0.964
 Precision : 1.000
 Recall : 0.732
 F1 : 0.845
-All scores can  be found in reports/metrics csv
+All scores can  be found in reports/metrics.csv
 
+the Diagram can be found in reports/metrics.png
 
 # How to use this ?
 

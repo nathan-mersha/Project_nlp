@@ -64,6 +64,11 @@ def train():
         results.append(row)
     columns = ["train_size", "accuracy", "precision", "recall", "f1"]
     pan.DataFrame(results, columns=columns).to_csv(metrics_path, index=False)
+
+    metrics = pan.DataFrame(results, columns=columns)
+    metrics.to_csv("reports/metrics.png", index=False)
+    metrics.plot(x="train_size", marker="o").figure.savefig("reports/metrics.png")
+    
     joblib.dump(model, model_path)
     joblib.dump(vectorizer, vectorizer_path)
 
