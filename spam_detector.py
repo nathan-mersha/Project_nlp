@@ -7,10 +7,15 @@ import sys
 import nltk
 from sklearn.model_selection import train_test_split
 
+# this downloads nltk , when running the first time it would have failed because there is no nltk at the start
+for res in ["stopwords", "wordnet", "omw-1.4", "punkt", "punkt_tab"]:
+    nltk.download(res, quiet=True)
+
+my_stop_words = set(nltk.corpus.stopwords.words("english")) # i get all english stop words here, like the a and so on
+lem = nltk.stem.WordNetLemmatizer()
 # so this funciton cleans up the text and removes the unnnecessary stop words
 def cleanup_txt(text):
-    my_stop_words = set(nltk.corpus.stopwords.words("english")) # i get all english stop words here, like the a and so on
-    lem = nltk.stem.WordNetLemmatizer()
+   
     cleaned_wrds = ""
     for word in nltk.tokenize.word_tokenize(text.lower()):
         if word not in my_stop_words:
@@ -71,7 +76,7 @@ def predict(text):
     if model.predict(vector)[0] == 1:
         print("this is a spam")
     else:
-        print('this is nNot a spam')
+        print('this is legitimate')
 
 
 command = sys.argv[1] if len(sys.argv) > 1 else ""
@@ -80,6 +85,13 @@ if command == "train":
     train()
 elif command == "predict" and message:
     predict(message)
+elif command == "dev":
+    print(
+        '''
+        For IU project NLP 
+        Nathan Mersha Degineh
+        '''
+    )    
 else:
     print(
     ''' i dont know this command, there are 2 availble. 
